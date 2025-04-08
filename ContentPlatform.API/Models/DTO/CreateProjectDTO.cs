@@ -1,4 +1,4 @@
-namespace ContentPlatform.API.Models;
+namespace ContentPlatform.API.Models.DTO;
 
 public class CreateProjectDto
 {

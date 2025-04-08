@@ -1,5 +1,6 @@
 using ContentPlatform.API.Data;
 using ContentPlatform.API.Models;
+using ContentPlatform.API.Models.DTO;
 
 namespace ContentPlatform.API.Services;
     public class ProjectService : IProjectService

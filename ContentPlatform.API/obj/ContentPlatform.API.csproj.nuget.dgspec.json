@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/docitu/Documents/csharp/content-generator-back/ContentPlatform.API/ContentPlatform.API.csproj": {}
+    "/home/docitu/Documents/csharp/contentgenerator/ContentPlatform.API/ContentPlatform.API.csproj": {}
   },
   "projects": {
-    "/home/docitu/Documents/csharp/content-generator-back/ContentPlatform.API/ContentPlatform.API.csproj": {
+    "/home/docitu/Documents/csharp/contentgenerator/ContentPlatform.API/ContentPlatform.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/docitu/Documents/csharp/content-generator-back/ContentPlatform.API/ContentPlatform.API.csproj",
+        "projectUniqueName": "/home/docitu/Documents/csharp/contentgenerator/ContentPlatform.API/ContentPlatform.API.csproj",
         "projectName": "ContentPlatform.API",
-        "projectPath": "/home/docitu/Documents/csharp/content-generator-back/ContentPlatform.API/ContentPlatform.API.csproj",
+        "projectPath": "/home/docitu/Documents/csharp/contentgenerator/ContentPlatform.API/ContentPlatform.API.csproj",
         "packagesPath": "/home/docitu/.nuget/packages/",
-        "outputPath": "/home/docitu/Documents/csharp/content-generator-back/ContentPlatform.API/obj/",
+        "outputPath": "/home/docitu/Documents/csharp/contentgenerator/ContentPlatform.API/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/docitu/.nuget/NuGet/NuGet.Config"
@@ -58,6 +58,16 @@
               "target": "Package",
               "version": "[8.0.12, )"
             },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.6.2, )"
@@ -86,7 +96,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.112/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.115/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

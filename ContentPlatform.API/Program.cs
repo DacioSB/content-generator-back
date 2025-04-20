@@ -1,23 +1,13 @@
-using Supabase;
 using ContentPlatform.API.Data;
+using ContentPlatform.API.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Read config
-builder.Services.Configure<SupabaseOptions>(
-    builder.Configuration.GetSection("Supabase"));
-
-// Add Supabase client
-builder.Services.AddSingleton<Client>(provider =>
-{
-    var config = provider.GetRequiredService<IOptions<SupabaseOptions>>().Value;
-    var supabase = new Client(config.Url, config.ApiKey);
-    supabase.InitializeAsync().Wait(); // Consider moving this to background init
-    return supabase;
-});
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add custom services
-builder.Services.AddScoped<ISupabaseRepository, SupabaseRepository>();
+builder.Services.AddScoped<IProjectSupabaseRepository, ProjectSupabaseRepository>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 
 // Swagger + Controllers

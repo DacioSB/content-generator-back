@@ -11,31 +11,29 @@ public class ProjectSupabaseRepository : IProjectSupabaseRepository
     {
         _context = context;
     }
-    public Task<Project?> GetProjectByIdAsync(Guid projectId)
+    public async Task<Project?> GetProjectByIdAsync(Guid projectId)
     {
-        return await _db.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
+        return await _context.Projects.FirstOrDefaultAsync(p => p.Id == projectId);
     }
 
-    public Task<IEnumerable<Content>> GetProjectContentAsync(string userId, Guid projectId)
+    public async Task<IEnumerable<Content>> GetProjectContentAsync(string userId, Guid projectId)
     {
-        return await _db.Contents.Where(c => c.UserId == userId && c.ProjectId == projectId).ToListAsync();
+        return await _context.Contents.Where(c => c.UserId == userId && c.ProjectId == projectId).ToListAsync();
     }
 
-    public Task<IEnumerable<Project>> GetProjectsByUserAsync(string userId)
+    public async Task<IEnumerable<Project>> GetProjectsByUserAsync(string userId)
     {
-        return await _db.Projects.Where(p => p.UserId == userId).ToListAsync();
+        return await _context.Projects.Where(p => p.UserId == userId).ToListAsync();
     }
 
-    public Task<IEnumerable<Project>> GetPublicProjectsAsync()
+    public async Task<IEnumerable<Project>> GetPublicProjectsAsync()
     {
-        return await _db.Projects.Where(p => p.IsPublic).ToListAsync();
+        return await _context.Projects.Where(p => p.IsPublic).ToListAsync();
     }
 
-    public Task InsertProjectAsync(Project project)
+    public async Task InsertProjectAsync(Project project)
     {
-        _db.Projects.Add(project);
-        await _db.SaveChangesAsync();
-
-        return Task.CompletedTask;
+        _context.Projects.Add(project);
+        await _context.SaveChangesAsync();
     }
 }

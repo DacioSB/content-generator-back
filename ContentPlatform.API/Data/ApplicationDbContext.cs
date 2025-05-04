@@ -1,7 +1,7 @@
 using ContentPlatform.API.Models;
 using Microsoft.EntityFrameworkCore;
 
-class ApplicationDbContext : DbContext
+public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -80,6 +80,19 @@ class ApplicationDbContext : DbContext
 
             // Add composite index for common queries
             entity.HasIndex(e => new { e.ProjectId, e.UserId });
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            
+            entity.Property(e => e.Email)
+                .IsRequired()
+                .HasMaxLength(255);
+                
+            // Add index on Email for better query performance
+            entity.HasIndex(e => e.Email)
+                .IsUnique();
         });
     }
 }

@@ -1,3 +1,4 @@
+using ContentPlatform.API.Auth;
 using ContentPlatform.API.Data;
 using ContentPlatform.API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,22 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add custom services
 builder.Services.AddScoped<IProjectSupabaseRepository, ProjectSupabaseRepository>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+// Add Clerk authentication
+builder.Services.AddClerkAuthentication(builder.Configuration);
+
+// Configure CORS for frontend
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000", "https://your-production-frontend-url.com")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
+});
 
 // Swagger + Controllers
 builder.Services.AddControllers();
@@ -20,8 +37,13 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+app.UseCors("AllowFrontend");
+
+// Authentication and authorization
 app.UseAuthentication();
+app.UseClerkUserSync(); // Add the Clerk user sync middleware
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

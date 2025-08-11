@@ -1,26 +1,38 @@
-using ContentPlatform.API.Auth;
 using ContentPlatform.API.Data;
 using ContentPlatform.API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+var clerkIssuer = builder.Configuration["Clerk:JwtIssuer"];
 // Add custom services
 builder.Services.AddScoped<IProjectSupabaseRepository, ProjectSupabaseRepository>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 // Add Clerk authentication
-builder.Services.AddClerkAuthentication(builder.Configuration);
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = clerkIssuer;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            NameClaimType = "sub" // Clerk user ID
+        };
+    });
 
 // Configure CORS for frontend
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "https://your-production-frontend-url.com")
+        policy.WithOrigins("http://localhost:5173", "https://your-production-frontend-url.com")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
@@ -41,7 +53,6 @@ app.UseCors("AllowFrontend");
 
 // Authentication and authorization
 app.UseAuthentication();
-app.UseClerkUserSync(); // Add the Clerk user sync middleware
 app.UseAuthorization();
 
 app.MapControllers();

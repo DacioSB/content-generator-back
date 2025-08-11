@@ -62,7 +62,12 @@ public class UserService : IUserService
             
             // The user now exists, so we can detach our failed entity and fetch the existing one.
             _context.ChangeTracker.Clear();
-            return await GetUserByClerkIdAsync(clerkUserId);
+            var existingUser = await GetUserByClerkIdAsync(clerkUserId);
+            if (existingUser is null)
+            {
+                throw new InvalidOperationException($"User with Clerk ID {clerkUserId} could not be found after race condition.");
+            }
+            return existingUser;
         }
     }
 

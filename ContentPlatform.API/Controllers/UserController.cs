@@ -20,23 +20,23 @@ namespace ContentPlatform.API.Controllers;
     [HttpPost("sync")]
     public async Task<IActionResult> SyncUser()
     {
-        // Get user info from JWT claims
+        // Using the standard ClaimTypes, which match the mapped claims from the JWT handler.
         var clerkUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var email = User.FindFirstValue(ClaimTypes.Email);
 
-        //print clerkUserId and email for debugging
-        Console.WriteLine($"Clerk User ID: {clerkUserId}, Email: {email}");
-
         if (string.IsNullOrEmpty(clerkUserId) || string.IsNullOrEmpty(email))
         {
-            return BadRequest("Invalid user information");
+            Console.WriteLine($"SyncUser failed: clerkUserId is '{clerkUserId}', email is '{email}'.");
+            return BadRequest("Invalid user information. Clerk User ID or Email not found in token claims.");
         }
+
         var user = await _userService.CreateOrUpdateUserAsync(clerkUserId, email);
            
         if (user == null)
         {
-            return StatusCode(500, "Failed to sync user");
+            return StatusCode(500, "Failed to sync user with the database.");
         }
+
         return Ok(new
         {
             message = "User synced successfully",

@@ -1,5 +1,6 @@
 using ContentPlatform.API.Models;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace ContentPlatform.API.Services;
 
@@ -23,31 +24,46 @@ public class UserService : IUserService
     {
         var user = await GetUserByClerkIdAsync(clerkUserId);
 
-        if (user == null)
+        if (user != null)
         {
-            // Create new user
-            user = new User
-            {
-                Id = clerkUserId,
-                Email = email
-            };
-
-            _context.Add(user);
-            _logger.LogInformation("Created new user with Clerk ID: {ClerkUserId}", clerkUserId);
-        }
-        else
-        {
-            // Update existing user if email changed
+            // User already exists, update email if it's different.
             if (user.Email != email)
             {
                 user.Email = email;
                 _context.Update(user);
                 _logger.LogInformation("Updated user email for Clerk ID: {ClerkUserId}", clerkUserId);
+                await _context.SaveChangesAsync();
             }
+            return user;
         }
 
-        await _context.SaveChangesAsync();
-        return user;
+        // User does not exist, so let's create them.
+        var newUser = new User
+        {
+            Id = clerkUserId,
+            Email = email
+        };
+        _context.Add(newUser);
+
+        try
+        {
+            await _context.SaveChangesAsync();
+            _logger.LogInformation("Created new user with Clerk ID: {ClerkUserId}", clerkUserId);
+            return newUser;
+        }
+        catch (DbUpdateException ex) when (ex.InnerException is PostgresException { SqlState: "23505" })
+        {
+            // This specific error code (23505) means a unique constraint was violated.
+            // This handles the race condition where another request created the user
+            // between our check and our SaveChanges call.
+            _logger.LogWarning(
+                "Race condition detected: User with Clerk ID {ClerkUserId} was created by another request. Fetching existing user.",
+                clerkUserId);
+            
+            // The user now exists, so we can detach our failed entity and fetch the existing one.
+            _context.ChangeTracker.Clear();
+            return await GetUserByClerkIdAsync(clerkUserId);
+        }
     }
 
     public async Task<bool> ValidateUserOwnershipAsync(string clerkUserId, Guid projectId)

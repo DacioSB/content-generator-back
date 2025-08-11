@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ContentPlatform.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b1859f8113e117b17ecaa4073fa9562a91ba012a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cebf6ae13154fb8cb676f1d9dc89318b96b3f61f")]
 [assembly: System.Reflection.AssemblyProductAttribute("ContentPlatform.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ContentPlatform.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

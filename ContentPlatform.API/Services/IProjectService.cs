@@ -9,4 +9,6 @@ namespace ContentPlatform.API.Services;
     Task<IEnumerable<Project>> GetPublicProjectsAsync();
     Task<Project?> GetProjectByIdAsync(Guid projectId);
     Task<IEnumerable<Content>> GetProjectContentAsync(string userId, Guid projectId);
+    Task<Project> UpdateProjectAsync(string userId, Guid projectId, UpdateProjectDTO dto);
+    Task DeleteProjectAsync(string userId, Guid projectId);
 }

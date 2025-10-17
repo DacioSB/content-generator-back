@@ -36,4 +36,17 @@ public class ProjectSupabaseRepository : IProjectSupabaseRepository
         _context.Projects.Add(project);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<Project?> UpdateProjectAsync(Project project)
+    {
+        _context.Projects.Update(project);
+        await _context.SaveChangesAsync();
+        return project;
+    }
+
+    public async Task DeleteProjectAsync(Project project)
+    {
+        _context.Projects.Remove(project);
+        await _context.SaveChangesAsync();
+    }
 }

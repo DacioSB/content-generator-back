@@ -8,4 +8,6 @@ public interface IProjectSupabaseRepository {
     Task<IEnumerable<Project>> GetPublicProjectsAsync();
     Task<Project?> GetProjectByIdAsync(Guid projectId);
     Task<IEnumerable<Content>> GetProjectContentAsync(string userId, Guid projectId);
+    Task<Project?> UpdateProjectAsync(Project project);
+    Task DeleteProjectAsync(Project project);
 }

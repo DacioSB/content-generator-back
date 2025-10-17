@@ -20,9 +20,13 @@ namespace ContentPlatform.API.Controllers;
     [HttpPost("sync")]
     public async Task<IActionResult> SyncUser()
     {
+        Console.WriteLine("SyncUser called.");
         // Using the standard ClaimTypes, which match the mapped claims from the JWT handler.
         var clerkUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var email = User.FindFirstValue(ClaimTypes.Email);
+
+        // For debugging, print the claims to the console.
+        Console.WriteLine($"SyncUser: Clerk User ID: {clerkUserId}, Email: {email}");
 
         if (string.IsNullOrEmpty(clerkUserId) || string.IsNullOrEmpty(email))
         {

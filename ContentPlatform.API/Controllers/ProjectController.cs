@@ -63,8 +63,28 @@ public class ProjectController : ControllerBase
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(userId)) return Unauthorized();
-        
+
         var content = await _projectService.GetProjectContentAsync(userId, projectId);
         return Ok(content);
+    }
+
+    [HttpPut("{projectId}")]
+    public async Task<IActionResult> UpdateProject(Guid projectId, [FromBody] UpdateProjectDTO dto)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+        var project = await _projectService.UpdateProjectAsync(userId, projectId, dto);
+        return Ok(project);
+    }
+
+    [HttpDelete("{projectId}")]
+    public async Task<IActionResult> DeleteProject(Guid projectId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+        await _projectService.DeleteProjectAsync(userId, projectId);
+        return NoContent();
     }
 }

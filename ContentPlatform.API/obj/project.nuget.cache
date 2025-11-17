@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "UMb6w8DY9qc=",
+  "dgSpecHash": "nHjzu3XALbAPLEZMqv7cpVORFc9AvBokKrnb/A6cwO/fJdbmxHrHK/t+gYkf6+swx0BPjPPh5sOj+QYE1KsFmQ==",
   "success": true,
   "projectFilePath": "/home/docitu/Documents/csharp/contentgenerator/ContentPlatform.API/ContentPlatform.API.csproj",
   "expectedPackageFiles": [
@@ -87,15 +87,14 @@
     "/home/docitu/.nuget/packages/system.text.encodings.web/9.0.4/system.text.encodings.web.9.0.4.nupkg.sha512",
     "/home/docitu/.nuget/packages/system.text.json/9.0.4/system.text.json.9.0.4.nupkg.sha512",
     "/home/docitu/.nuget/packages/system.threading.channels/8.0.0/system.threading.channels.8.0.0.nupkg.sha512",
-    "/home/docitu/.nuget/packages/websocket.client/5.1.1/websocket.client.5.1.1.nupkg.sha512",
-    "/home/docitu/.nuget/packages/microsoft.netcore.app.host.linux-x64/8.0.19/microsoft.netcore.app.host.linux-x64.8.0.19.nupkg.sha512"
+    "/home/docitu/.nuget/packages/websocket.client/5.1.1/websocket.client.5.1.1.nupkg.sha512"
   ],
   "logs": [
     {
       "code": "NU1603",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "ContentPlatform.API depends on Microsoft.Extensions.Configuration.Json (>= 8.0.115) but Microsoft.Extensions.Configuration.Json 8.0.115 was not found. Microsoft.Extensions.Configuration.Json 9.0.0 was resolved instead.",
+      "message": "ContentPlatform.API depends on Microsoft.Extensions.Configuration.Json (>= 8.0.115) but Microsoft.Extensions.Configuration.Json 8.0.115 was not found. An approximate best match of Microsoft.Extensions.Configuration.Json 9.0.0 was resolved.",
       "libraryId": "Microsoft.Extensions.Configuration.Json",
       "targetGraphs": [
         "net8.0"

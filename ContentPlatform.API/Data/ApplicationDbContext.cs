@@ -74,7 +74,7 @@ public class ApplicationDbContext : DbContext
 
             // Define relationship between Content and Project
             entity.HasOne<Project>()
-                .WithMany()
+                .WithMany(p => p.Contents)
                 .HasForeignKey(e => e.ProjectId)
                 .OnDelete(DeleteBehavior.Restrict);
 

@@ -2,20 +2,18 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using ContentPlatform.API.Models.DTO;
-using ContentPlatform.API.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using ContentPlatform.API.Services;
 
 [Authorize]
 [ApiController]
 [Route("api/content")]
 public class ContentController : ControllerBase
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IContentService _contentService;
 
-    public ContentController(ApplicationDbContext context)
+    public ContentController(IContentService contentService)
     {
-        _context = context;
+        _contentService = contentService;
     }
 
     [HttpGet("recent")]
@@ -24,23 +22,27 @@ public class ContentController : ControllerBase
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-        var recentContent = await _context.Contents
-            .Where(c => c.UserId == userId)
-            .OrderByDescending(c => c.CreatedAt)
-            .Take(10)
-            .Select(c => new RecentContentDto
-            {
-                Id = c.Id.ToString(),
-                Title = c.Title,
-                Type = c.Type.ToLower(),
-                Status = c.Status,
-                // This is a simplification. A library like Humanizer can create "2 hours ago" strings.
-                Date = c.CreatedAt.ToString("g") 
-            })
-            .ToListAsync();
-
+        var recentContent = await _contentService.GetRecentContentAsync(userId);
         return Ok(recentContent);
     }
     
-    // We will implement the POST method for generation in the next phase.
+    [HttpPost("generate")]
+    public async Task<IActionResult> GenerateContent([FromBody] CreateContentRequestDto request)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+        var newContent = await _contentService.GenerateContentAsync(userId, request);
+
+        var dto = new RecentContentDto
+        {
+            Id = newContent.Id.ToString(),
+            Title = newContent.Title,
+            Type = newContent.Type.ToLower(),
+            Status = newContent.Status,
+            Date = newContent.CreatedAt.ToString("g")
+        };
+        
+        return CreatedAtAction(nameof(GetRecentContent), new { id = newContent.Id }, dto);
+    }
 }

@@ -13,6 +13,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IProjectSupabaseRepository, ProjectSupabaseRepository>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IContentRepository, ContentRepository>();
+builder.Services.AddScoped<IContentService, ContentService>();
 
 // Add Clerk authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

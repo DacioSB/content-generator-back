@@ -36,7 +36,7 @@ public class ContentService : IContentService
         {
             Id = Guid.NewGuid(),
             UserId = userId,
-            ProjectId = request.ProjectId ?? Guid.Empty,
+            ProjectId = request.ProjectId == Guid.Empty ? null : request.ProjectId,
             Title = request.Prompt.Substring(0, Math.Min(request.Prompt.Length, 50)),
             Type = request.Type,
             Status = "Completed",

@@ -42,7 +42,6 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.DeletedAt)
                 .IsRequired(false);
 
-            // Add index on UserId for better query performance
             entity.HasIndex(e => e.UserId);
         });
 
@@ -51,7 +50,7 @@ public class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Id);
             
             entity.Property(e => e.ProjectId)
-                .IsRequired();
+                .IsRequired(false);
                 
             entity.Property(e => e.Data)
                 .IsRequired()
@@ -72,13 +71,12 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.DeletedAt)
                 .IsRequired(false);
 
-            // Define relationship between Content and Project
             entity.HasOne<Project>()
                 .WithMany(p => p.Contents)
                 .HasForeignKey(e => e.ProjectId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
 
-            // Add composite index for common queries
             entity.HasIndex(e => new { e.ProjectId, e.UserId });
         });
 
@@ -90,7 +88,6 @@ public class ApplicationDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(255);
                 
-            // Add index on Email for better query performance
             entity.HasIndex(e => e.Email)
                 .IsUnique();
         });

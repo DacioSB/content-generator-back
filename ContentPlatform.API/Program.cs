@@ -1,5 +1,6 @@
 using ContentPlatform.API.Data;
 using ContentPlatform.API.Services;
+using ContentPlatform.API.Services.AI;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -15,6 +16,7 @@ builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IContentRepository, ContentRepository>();
 builder.Services.AddScoped<IContentService, ContentService>();
+builder.Services.AddScoped<IAIGenerationService, AzureOpenAIService>();
 
 // Add Clerk authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

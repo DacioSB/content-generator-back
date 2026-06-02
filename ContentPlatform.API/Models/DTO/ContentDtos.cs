@@ -6,8 +6,9 @@ public class RecentContentDto
     public string Id { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string Type { get; set; } = string.Empty;
-    public string Date { get; set; } = string.Empty; // e.g., "2 hours ago"
+    public string Date { get; set; } = string.Empty;
     public string Status { get; set; } = string.Empty;
+    public string Data { get; set; } = string.Empty;
 }
 
 // For the content generation request

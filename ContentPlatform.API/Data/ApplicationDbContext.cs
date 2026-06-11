@@ -53,8 +53,7 @@ public class ApplicationDbContext : DbContext
                 .IsRequired(false);
                 
             entity.Property(e => e.Data)
-                .IsRequired()
-                .HasMaxLength(1024);
+                .IsRequired();
                 
             entity.Property(e => e.UserId)
                 .IsRequired()

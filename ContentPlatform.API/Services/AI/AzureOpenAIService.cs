@@ -1,5 +1,6 @@
 using Azure.AI.OpenAI;
 using OpenAI.Chat;
+using OpenAI.Images;
 using System.ClientModel;
 
 namespace ContentPlatform.API.Services.AI;
@@ -7,6 +8,9 @@ namespace ContentPlatform.API.Services.AI;
 public class AzureOpenAIService : IAIGenerationService
 {
     private readonly ChatClient _chatClient;
+
+    private readonly ImageClient _imageClient;
+
     private readonly ILogger<AzureOpenAIService> _logger;
 
     public AzureOpenAIService(IConfiguration configuration, ILogger<AzureOpenAIService> logger)
@@ -17,17 +21,20 @@ public class AzureOpenAIService : IAIGenerationService
             ?? throw new InvalidOperationException("AzureOpenAI:Endpoint is not configured");
         var apiKey = configuration["AzureOpenAI:ApiKey"] 
             ?? throw new InvalidOperationException("AzureOpenAI:ApiKey is not configured");
-        var deploymentName = configuration["AzureOpenAI:DeploymentName"] 
+        var chatDeployment = configuration["AzureOpenAI:DeploymentName"] 
             ?? throw new InvalidOperationException("AzureOpenAI:DeploymentName is not configured");
+        var imageDeployment = configuration["AzureOpenAI:ImageDeploymentName"] 
+            ?? throw new InvalidOperationException("AzureOpenAI:ImageDeploymentName is not configured");
 
         var azureClient = new AzureOpenAIClient(
             new Uri(endpoint), 
             new ApiKeyCredential(apiKey)
         );
         
-        _chatClient = azureClient.GetChatClient(deploymentName);
+        _chatClient = azureClient.GetChatClient(chatDeployment);
+        _imageClient = azureClient.GetImageClient(imageDeployment);
         
-        _logger.LogInformation("AzureOpenAIService initialized with deployment: {DeploymentName}", deploymentName);
+        _logger.LogInformation("AzureOpenAIService initialized. Chat: {Chat}, Image: {Image}", chatDeployment, imageDeployment);
     }
 
     public async Task<string> GenerateTextAsync(string prompt)
@@ -63,9 +70,28 @@ public class AzureOpenAIService : IAIGenerationService
 
     public async Task<string> GenerateImageAsync(string prompt)
     {
-        // Image generation will be implemented in the next task
-        _logger.LogWarning("Image generation called but not yet implemented");
-        await Task.CompletedTask;
-        throw new NotImplementedException("Image generation will be implemented in the next task");
+        try
+        {
+            _logger.LogInformation("Generating image for prompt: {Prompt}", prompt.Substring(0, Math.Min(50, prompt.Length)));
+
+            ClientResult<GeneratedImage> clientResult = await _imageClient.GenerateImageAsync(prompt, new ImageGenerationOptions
+            {
+               Size = GeneratedImageSize.W1024xH1024,
+               Quality = new GeneratedImageQuality("medium"),
+            });
+
+            byte[] imageBytes = clientResult.Value.ImageBytes.ToArray();
+
+            var imageUrl = $"data:image/png;base64,{Convert.ToBase64String(imageBytes)}";
+
+            _logger.LogInformation("Successfully generated image");
+            
+            return imageUrl;
+
+        } catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to generate image: {Message}", ex.Message);
+            throw new InvalidOperationException($"Failed to generate image: {ex.Message}", ex);
+        }
     }
 }

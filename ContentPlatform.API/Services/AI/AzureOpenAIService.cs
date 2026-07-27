@@ -80,9 +80,7 @@ public class AzureOpenAIService : IAIGenerationService
                Quality = new GeneratedImageQuality("medium"),
             });
 
-            byte[] imageBytes = clientResult.Value.ImageBytes.ToArray();
-
-            var imageUrl = $"data:image/png;base64,{Convert.ToBase64String(imageBytes)}";
+            String imageUrl = clientResult.Value.ImageUri.ToString();
 
             _logger.LogInformation("Successfully generated image");
             

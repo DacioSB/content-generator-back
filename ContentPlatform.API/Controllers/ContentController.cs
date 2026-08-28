@@ -40,7 +40,8 @@ public class ContentController : ControllerBase
             Title = newContent.Title,
             Type = newContent.Type.ToLower(),
             Status = newContent.Status,
-            Date = newContent.CreatedAt.ToString("g")
+            Date = newContent.CreatedAt.ToString("g"),
+            Data = newContent.Data
         };
         
         return CreatedAtAction(nameof(GetRecentContent), new { id = newContent.Id }, dto);

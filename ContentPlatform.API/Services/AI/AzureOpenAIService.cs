@@ -1,4 +1,5 @@
 using Azure.AI.OpenAI;
+using ContentPlatform.API.Services.Storage;
 using OpenAI.Chat;
 using OpenAI.Images;
 using System.ClientModel;
@@ -11,11 +12,14 @@ public class AzureOpenAIService : IAIGenerationService
 
     private readonly ImageClient _imageClient;
 
+    private readonly IStorageService _storageService;
+
     private readonly ILogger<AzureOpenAIService> _logger;
 
-    public AzureOpenAIService(IConfiguration configuration, ILogger<AzureOpenAIService> logger)
+    public AzureOpenAIService(IConfiguration configuration, IStorageService storageService, ILogger<AzureOpenAIService> logger)
     {
         _logger = logger;
+        _storageService = storageService;
         
         var endpoint = configuration["AzureOpenAI:Endpoint"] 
             ?? throw new InvalidOperationException("AzureOpenAI:Endpoint is not configured");
@@ -79,10 +83,17 @@ public class AzureOpenAIService : IAIGenerationService
                Size = GeneratedImageSize.W1024xH1024,
                Quality = new GeneratedImageQuality("medium"),
             });
+            BinaryData imageBytes = clientResult.Value.ImageBytes;
 
-            String imageUrl = clientResult.Value.ImageUri.ToString();
+            if (imageBytes == null || imageBytes.ToArray().Length == 0)
+            {
+                throw new InvalidOperationException("Failed to generate image");
+            }
+            var fileName = $"{Guid.NewGuid()}.png";
 
-            _logger.LogInformation("Successfully generated image");
+            string imageUrl = await _storageService.UploadImageAsync(imageBytes.ToArray(), fileName);
+
+            _logger.LogInformation("Successfully generated and uploaded image to {Url}", imageUrl);
             
             return imageUrl;
 

@@ -31,7 +31,8 @@ public class ContentService : IContentService
             Title = c.Title,
             Type = c.Type.ToLower(),
             Status = c.Status,
-            Date = c.CreatedAt.ToString("g")
+            Date = c.CreatedAt.ToString("g"),
+            Data = c.Data
         });
     }
 

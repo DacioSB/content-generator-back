@@ -49,6 +49,10 @@
               "target": "Package",
               "version": "[12.0.1, )"
             },
+            "Azure.AI.ContentSafety": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
             "Azure.AI.OpenAI": {
               "target": "Package",
               "version": "[2.1.0, )"

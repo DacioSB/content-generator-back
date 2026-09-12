@@ -31,6 +31,23 @@
           "lib/netstandard2.1/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {}
         }
       },
+      "Azure.AI.ContentSafety/1.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Azure.Core": "1.36.0",
+          "System.Text.Json": "4.7.2"
+        },
+        "compile": {
+          "lib/netstandard2.0/Azure.AI.ContentSafety.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/Azure.AI.ContentSafety.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Azure.AI.OpenAI/2.1.0": {
         "type": "package",
         "dependencies": {
@@ -1923,6 +1940,22 @@
         "automapper.extensions.microsoft.dependencyinjection.nuspec",
         "icon.png",
         "lib/netstandard2.1/AutoMapper.Extensions.Microsoft.DependencyInjection.dll"
+      ]
+    },
+    "Azure.AI.ContentSafety/1.0.0": {
+      "sha512": "62UgYaWYXlieHXnvF6EZjPahgYcuRe0jhsDZu8pMGhvUwkEsgmL4d2ag3Wlk+nYdLbKCE3TIPJmAPI/U/BVYJQ==",
+      "type": "package",
+      "path": "azure.ai.contentsafety/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "CHANGELOG.md",
+        "README.md",
+        "azure.ai.contentsafety.1.0.0.nupkg.sha512",
+        "azure.ai.contentsafety.nuspec",
+        "azureicon.png",
+        "lib/netstandard2.0/Azure.AI.ContentSafety.dll",
+        "lib/netstandard2.0/Azure.AI.ContentSafety.xml"
       ]
     },
     "Azure.AI.OpenAI/2.1.0": {
@@ -5332,6 +5365,7 @@
   "projectFileDependencyGroups": {
     "net9.0": [
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 12.0.1",
+      "Azure.AI.ContentSafety >= 1.0.0",
       "Azure.AI.OpenAI >= 2.1.0",
       "Azure.Storage.Blobs >= 12.29.1",
       "FluentValidation.AspNetCore >= 11.3.0",
@@ -5392,6 +5426,10 @@
           "AutoMapper.Extensions.Microsoft.DependencyInjection": {
             "target": "Package",
             "version": "[12.0.1, )"
+          },
+          "Azure.AI.ContentSafety": {
+            "target": "Package",
+            "version": "[1.0.0, )"
           },
           "Azure.AI.OpenAI": {
             "target": "Package",

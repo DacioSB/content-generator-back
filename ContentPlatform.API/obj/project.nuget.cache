@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "Tt0VvZxjskk=",
+  "dgSpecHash": "vsrB2WSfHh8=",
   "success": true,
   "projectFilePath": "/home/docitu/Documents/csharp/contentgenerator/ContentPlatform.API/ContentPlatform.API.csproj",
   "expectedPackageFiles": [
     "/home/docitu/.nuget/packages/automapper/12.0.1/automapper.12.0.1.nupkg.sha512",
     "/home/docitu/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/12.0.1/automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
+    "/home/docitu/.nuget/packages/azure.ai.contentsafety/1.0.0/azure.ai.contentsafety.1.0.0.nupkg.sha512",
     "/home/docitu/.nuget/packages/azure.ai.openai/2.1.0/azure.ai.openai.2.1.0.nupkg.sha512",
     "/home/docitu/.nuget/packages/azure.core/1.55.0/azure.core.1.55.0.nupkg.sha512",
     "/home/docitu/.nuget/packages/azure.storage.blobs/12.29.1/azure.storage.blobs.12.29.1.nupkg.sha512",

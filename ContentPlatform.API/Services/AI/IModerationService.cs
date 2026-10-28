@@ -10,5 +10,5 @@ public class ModerationResult
 public interface IModerationService
 {
     public Task<ModerationResult> TextMod(string text);
-    public Task<ModerationResult> ImgMod(byte[] image);
+    public Task<ModerationResult> ImgMod(string imageUrl);
 }

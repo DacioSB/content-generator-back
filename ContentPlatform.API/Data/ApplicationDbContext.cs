@@ -66,6 +66,10 @@ public class ApplicationDbContext : DbContext
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("now()")
                 .IsRequired();
+
+            entity.Property(e => e.Status)
+                .HasConversion<string>()
+                .IsRequired();
                 
             entity.Property(e => e.DeletedAt)
                 .IsRequired(false);

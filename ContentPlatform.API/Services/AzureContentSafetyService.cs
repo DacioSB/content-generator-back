@@ -22,11 +22,6 @@ public class AzureContentSafetyService : IModerationService
 
         _logger.LogInformation("AzureContentSafetyService initialized");
     }
-    public Task<ModerationResult> ImgMod(byte[] image)
-    {
-        
-        throw new NotImplementedException();
-    }
 
     public async Task<ModerationResult> TextMod(string text)
     {
@@ -55,7 +50,7 @@ public class AzureContentSafetyService : IModerationService
             {
                 IsSafe = safe,
                 MaxSeverity = Score,
-                Reason = safe ? String.Empty : $"{Name} content detected (severity: {Score})"
+                Reason = safe ? string.Empty : $"{Name} content detected (severity: {Score})"
             };
         }
         catch (Exception ex)
@@ -63,6 +58,44 @@ public class AzureContentSafetyService : IModerationService
             
             _logger.LogError(ex, "Failed to moderate text: {Message}", ex.Message);
             return new ModerationResult { IsSafe = true, Reason = "Moderation check skipped due to error"};
+        }
+    }
+    public async Task<ModerationResult> ImgMod(string imageURL)
+    {
+        try
+        {
+            _logger.LogInformation("Moderating image at {Url}", imageURL);
+
+            var imageData = new ContentSafetyImageData(new Uri(imageURL));
+            var request = new AnalyzeImageOptions(imageData);
+            var response = await _client.AnalyzeImageAsync(request);
+
+            var categories = new[]
+            {
+                (Name: "Hate",     Score: response.Value.CategoriesAnalysis.FirstOrDefault(c => c.Category == ImageCategory.Hate)?.Severity ?? 0),
+                (Name: "Violence", Score: response.Value.CategoriesAnalysis.FirstOrDefault(c => c.Category == ImageCategory.Violence)?.Severity ?? 0),
+                (Name: "Sexual",   Score: response.Value.CategoriesAnalysis.FirstOrDefault(c => c.Category == ImageCategory.Sexual)?.Severity ?? 0),
+                (Name: "SelfHarm", Score: response.Value.CategoriesAnalysis.FirstOrDefault(c => c.Category == ImageCategory.SelfHarm)?.Severity ?? 0),
+            };
+
+            var maxCategory = categories.MaxBy(c => c.Score);
+            var isSafe = maxCategory.Score < SeverityTheshold;
+
+            _logger.LogInformation(
+                "Image moderation result: {Status} (max severity: {Severity} in {Category})",
+                isSafe ? "Safe" : "Flagged", maxCategory.Score, maxCategory.Name);
+
+            return new ModerationResult
+            {
+                IsSafe = isSafe,
+                MaxSeverity = maxCategory.Score,
+                Reason = isSafe ? string.Empty : $"{maxCategory.Name} content detected (severity: {maxCategory.Score})"
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to moderate image: {Message}", ex.Message);
+            return new ModerationResult { IsSafe = true, Reason = "Moderation check skipped due to error" };
         }
     }
 }

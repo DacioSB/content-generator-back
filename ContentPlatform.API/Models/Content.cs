@@ -5,7 +5,7 @@ public class Content
     public Guid? ProjectId { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Type { get; set; } = string.Empty;
-    public string Status { get; set; } = string.Empty;
+    public ContentStatus Status { get; set; } = ContentStatus.InProgress;
     public string Data { get; set; } = string.Empty; // URL to S3 bucket
     public string UserId { get; set; } = string.Empty;
     public User User { get; set; } = default!;

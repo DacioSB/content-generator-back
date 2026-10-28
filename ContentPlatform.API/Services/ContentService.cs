@@ -11,14 +11,18 @@ public class ContentService : IContentService
     private readonly IAIGenerationService _aiService;
     private readonly ILogger<ContentService> _logger;
 
+    private readonly IModerationService _moderationService;
+
     public ContentService(
         IContentRepository contentRepository, 
         IAIGenerationService aiService,
-        ILogger<ContentService> logger)
+        ILogger<ContentService> logger,
+        IModerationService moderationService)
     {
         _contentRepository = contentRepository;
         _aiService = aiService;
         _logger = logger;
+        _moderationService = moderationService;
     }
 
     public async Task<IEnumerable<RecentContentDto>> GetRecentContentAsync(string userId)
@@ -39,6 +43,7 @@ public class ContentService : IContentService
     public async Task<Content> GenerateContentAsync(string userId, CreateContentRequestDto request)
     {
         string generatedData;
+        ModerationResult moderationResult;
 
         try
         {
@@ -46,11 +51,13 @@ public class ContentService : IContentService
             {
                 _logger.LogInformation("Generating text content for user {UserId}", userId);
                 generatedData = await _aiService.GenerateTextAsync(request.Prompt);
+                moderationResult = await _moderationService.TextMod(generatedData);
             }
             else if (request.Type.ToLower() == "image")
             {
                 _logger.LogInformation("Generating image content for user {UserId}", userId);
                 generatedData = await _aiService.GenerateImageAsync(request.Prompt);
+                moderationResult = await _moderationService.ImgMod(generatedData);
             }
             else
             {
@@ -63,6 +70,11 @@ public class ContentService : IContentService
             throw new InvalidOperationException("Content generation failed. Please try again.", ex);
         }
 
+        if (!moderationResult.IsSafe)
+        {
+            _logger.LogWarning("Content flagged for user {UserId}: {Reason}", userId, moderationResult.Reason);
+        }
+
         var newContent = new Content
         {
             Id = Guid.NewGuid(),
@@ -70,7 +82,7 @@ public class ContentService : IContentService
             ProjectId = request.ProjectId == Guid.Empty ? null : request.ProjectId,
             Title = request.Prompt.Substring(0, Math.Min(request.Prompt.Length, 50)),
             Type = request.Type,
-            Status = "Completed", // Will be set by moderation in later tasks
+            Status = moderationResult.IsSafe ? ContentStatus.Completed : ContentStatus.Flagged,
             Data = generatedData,
             CreatedAt = DateTimeOffset.UtcNow,
             UpdatedAt = DateTimeOffset.UtcNow

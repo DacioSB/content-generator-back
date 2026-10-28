@@ -19,6 +19,7 @@ builder.Services.AddScoped<IContentRepository, ContentRepository>();
 builder.Services.AddScoped<IContentService, ContentService>();
 builder.Services.AddScoped<IAIGenerationService, AzureOpenAIService>();
 builder.Services.AddScoped<IStorageService, AzureBlobStorageService>();
+builder.Services.AddSingleton<IModerationService, AzureContentSafetyService>();
 
 // Add Clerk authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

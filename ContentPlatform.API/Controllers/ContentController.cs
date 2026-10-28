@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using ContentPlatform.API.Models.DTO;
 using ContentPlatform.API.Services;
+using ContentPlatform.API.Models;
 
 [Authorize]
 [ApiController]
@@ -41,7 +42,7 @@ public class ContentController : ControllerBase
             Type = newContent.Type.ToLower(),
             Status = newContent.Status,
             Date = newContent.CreatedAt.ToString("g"),
-            Data = newContent.Data
+            Data = newContent.Status == ContentStatus.Flagged ? string.Empty : newContent.Data
         };
         
         return CreatedAtAction(nameof(GetRecentContent), new { id = newContent.Id }, dto);
